@@ -17,16 +17,16 @@ export const applyAccentTheme = (colorKey) => {
   root.style.setProperty('--accent-blue', theme.blue);
 };
 
-export function SettingsManager({ isDarkMode, setIsDarkMode, showAlert }) {
+export function SettingsManager({ isDarkMode, setIsDarkMode, showAlert, hospitalProfile, setHospitalProfile }) {
   const [profile, setProfile] = useState(() => {
     const saved = localStorage.getItem('hospital_profile_settings');
-    return saved ? JSON.parse(saved) : {
+    return saved ? JSON.parse(saved) : (hospitalProfile || {
       name: 'CityCare Hospital',
       phone: '+1 (800) 555-0199',
       email: 'support@citycarehospital.org',
       address: '742 Evergreen Terrace, Medical District',
       icon: 'bi-shield-plus'
-    };
+    });
   });
 
   const [accentColor, setAccentColor] = useState(() => {
@@ -48,10 +48,14 @@ export function SettingsManager({ isDarkMode, setIsDarkMode, showAlert }) {
     e.preventDefault();
     localStorage.setItem('hospital_profile_settings', JSON.stringify(profile));
     localStorage.setItem('hospital_accent_color', accentColor);
+    if (setHospitalProfile) {
+      setHospitalProfile(profile);
+    }
+    window.dispatchEvent(new Event('storage'));
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 3000);
     if (showAlert) {
-      showAlert('Settings updated successfully! Generated reports will now reflect these details.', 'success');
+      showAlert('Settings updated successfully! Logo icon and hospital identity updated everywhere.', 'success');
     }
   };
 

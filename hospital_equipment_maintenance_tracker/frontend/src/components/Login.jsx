@@ -36,7 +36,16 @@ const ROLE_CONFIG = {
 };
 
 
-export default function Login({ onLogin, departmentsList }) {
+export default function Login({ onLogin, departmentsList, hospitalProfile }) {
+  const profile = hospitalProfile || (() => {
+    try {
+      const saved = localStorage.getItem('hospital_profile_settings');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) { return null; }
+  })();
+
+  const iconClass = profile?.icon || 'bi-shield-plus';
+  const hospitalName = profile?.name || 'HOSPITAL EQUIPMENT';
   const [selectedRole, setSelectedRole] = useState('Admin');
   const [selectedDepartment, setSelectedDepartment] = useState('Emergency');
   const [username, setUsername] = useState('');
@@ -105,10 +114,10 @@ export default function Login({ onLogin, departmentsList }) {
         {/* Brand Header */}
         <div className="login-brand">
           <div className="login-logo">
-            <i className="bi bi-shield-plus" />
+            <i className={`bi ${iconClass}`} />
           </div>
           <div>
-            <h1 className="login-brand-title">HOSPITAL EQUIPMENT</h1>
+            <h1 className="login-brand-title text-uppercase">{hospitalName}</h1>
             <p className="login-brand-sub"> Maintenance Tracker</p>
           </div>
         </div>

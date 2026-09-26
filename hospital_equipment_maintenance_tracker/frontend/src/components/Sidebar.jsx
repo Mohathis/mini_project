@@ -6,8 +6,20 @@ export function Sidebar({
   setActiveView,
   notifications = [],
   currentUser,
-  handleLogout
+  handleLogout,
+  hospitalProfile
 }) {
+  const profile = hospitalProfile || (() => {
+    try {
+      const saved = localStorage.getItem('hospital_profile_settings');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) { return null; }
+  })();
+
+  const iconClass = profile?.icon || 'bi-shield-plus';
+  const hospitalName = profile?.name || 'Hospital Equipment';
+  const hospitalSub = profile?.subtitle || 'Maintenance Tracker';
+
   const getSidebarActiveCSS = (viewName) => {
     if (activeView !== viewName) return '';
     if (viewName === 'equipment') return 'active-green';
@@ -24,10 +36,10 @@ export function Sidebar({
       <div className="sidebar-bg-overlay"></div>
 
       <div className="sidebar-header d-flex align-items-center gap-2">
-        <span className="text-white fs-4"><i className="bi bi-shield-plus"></i></span>
-        <div>
-          <h1 className="sidebar-brand-title">Hospital Equipment</h1>
-          <div className="sidebar-brand-subtitle">Maintenance Tracker</div>
+        <span className="text-white fs-4"><i className={`bi ${iconClass}`}></i></span>
+        <div style={{ overflow: 'hidden' }}>
+          <h1 className="sidebar-brand-title text-truncate m-0" style={{ fontSize: '1.05rem' }}>{hospitalName}</h1>
+          <div className="sidebar-brand-subtitle text-truncate" style={{ fontSize: '0.75rem' }}>{hospitalSub}</div>
         </div>
       </div>
 

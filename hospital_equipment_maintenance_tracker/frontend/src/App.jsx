@@ -29,6 +29,21 @@ function App() {
   const [techniciansList, setTechniciansList] = useState([]);
   const [staffList, setStaffList] = useState([]);
 
+  const [hospitalProfile, setHospitalProfile] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hospital_profile_settings');
+      return saved ? JSON.parse(saved) : {
+        name: 'CityCare Hospital',
+        phone: '+1 (800) 555-0199',
+        email: 'support@citycarehospital.org',
+        address: '742 Evergreen Terrace, Medical District',
+        icon: 'bi-shield-plus'
+      };
+    } catch (e) {
+      return { name: 'CityCare Hospital', icon: 'bi-shield-plus' };
+    }
+  });
+
   const fetchDepartments = async () => {
     try {
       const res = await fetch(`${API_URL}/departments`);
@@ -171,7 +186,7 @@ function App() {
   };
 
   if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} departmentsList={departmentsList} />;
+    return <Login onLogin={handleLogin} departmentsList={departmentsList} hospitalProfile={hospitalProfile} />;
   }
 
   // Format current date and time matching design
@@ -200,6 +215,7 @@ function App() {
           notifications={notifications}
           currentUser={currentUser}
           handleLogout={handleLogout}
+          hospitalProfile={hospitalProfile}
         />
 
         {/* Content Side */}
@@ -318,6 +334,8 @@ function App() {
                 isDarkMode={isDarkMode} 
                 setIsDarkMode={setIsDarkMode} 
                 showAlert={showAlert} 
+                hospitalProfile={hospitalProfile}
+                setHospitalProfile={setHospitalProfile}
               />
             )}
           </div>
