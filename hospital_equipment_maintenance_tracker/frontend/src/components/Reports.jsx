@@ -5,6 +5,18 @@ function Reports() {
   const [requestsList, setRequestsList] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const savedProfile = (() => {
+    try {
+      const saved = localStorage.getItem('hospital_profile_settings');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  })();
+
+  const hospitalName = savedProfile?.name || 'CityCare Hospital';
+  const hospitalIcon = savedProfile?.icon || 'bi-shield-plus';
+
   const getLocalDateString = () => {
     const d = new Date();
     const yyyy = d.getFullYear();
@@ -416,8 +428,16 @@ function Reports() {
               
               {/* Report Document Header */}
               <div className="border-bottom pb-4 mb-4 text-center">
-                <h3 className="fw-bold m-0 text-uppercase tracking-wider">CityCare Hospital</h3>
-                <p className="text-muted small m-0 mt-1 text-uppercase font-monospace">Equipment Maintenance Registry</p>
+                <div className="d-flex align-items-center justify-content-center gap-2 mb-1">
+                  <i className={`bi ${hospitalIcon} fs-3 text-primary`}></i>
+                  <h3 className="fw-bold m-0 text-uppercase tracking-wider">{hospitalName}</h3>
+                </div>
+                <p className="text-muted small m-0 text-uppercase font-monospace">Equipment Maintenance Registry</p>
+                {savedProfile?.phone && (
+                  <div className="small text-muted mt-1 font-monospace" style={{ fontSize: '0.75rem' }}>
+                    <span>Phone: {savedProfile.phone}</span> | <span>Email: {savedProfile.email || 'support@hospital.org'}</span>
+                  </div>
+                )}
                 <div className="badge bg-dark mt-2 font-monospace px-3 py-1">System Report Document</div>
               </div>
 
@@ -502,7 +522,7 @@ function Reports() {
 
               {/* Report Footer */}
               <div className="mt-5 pt-4 border-top text-center text-muted small">
-                <p className="m-0">End of Compiled Maintenance Report — CityCare Hospital Administration Office</p>
+                <p className="m-0">End of Compiled Maintenance Report — {hospitalName} Administration Office</p>
               </div>
 
             </div>
