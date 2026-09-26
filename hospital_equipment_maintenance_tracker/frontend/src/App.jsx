@@ -10,7 +10,7 @@ import Header from './components/Header';
 import DepartmentsManager from './components/DepartmentsManager';
 import TechniciansManager from './components/TechniciansManager';
 import StaffManager from './components/StaffManager';
-import SettingsManager from './components/SettingsManager';
+import SettingsManager, { applyAccentTheme } from './components/SettingsManager';
 
 export const API_URL = 'http://localhost:5000/api';
 
@@ -55,6 +55,7 @@ function App() {
   };
 
   useEffect(() => {
+    applyAccentTheme(localStorage.getItem('hospital_accent_color') || 'cyan');
     fetchDepartments();
     fetchUsers();
   }, [isLoggedIn]);

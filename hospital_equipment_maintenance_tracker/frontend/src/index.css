@@ -3,6 +3,9 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 :root {
+  --bs-primary: #0284c7;
+  --bs-primary-rgb: 2, 132, 199;
+
   --bg-primary: #0b0f19;
   --bg-secondary: #131c2e;
   --bg-tertiary: #1b2640;
@@ -28,6 +31,40 @@
   --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   --glass-bg: rgba(19, 28, 46, 0.7);
   --glass-blur: blur(12px);
+}
+
+/* Dynamic Accent Color Utility Overrides */
+.btn-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+  filter: brightness(0.9);
+}
+
+.btn-outline-primary {
+  color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:active {
+  background-color: var(--bs-primary) !important;
+  color: #ffffff !important;
+}
+
+.text-primary {
+  color: var(--bs-primary) !important;
+}
+
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+.border-primary {
+  border-color: var(--bs-primary) !important;
 }
 
 body {

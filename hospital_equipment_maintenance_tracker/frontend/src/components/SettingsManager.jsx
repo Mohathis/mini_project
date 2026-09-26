@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from 'react';
 
+export const applyAccentTheme = (colorKey) => {
+  const root = document.documentElement;
+  const map = {
+    cyan: { primary: '#0284c7', rgb: '2, 132, 199', cyan: '#00f2fe', blue: '#0284c7' },
+    emerald: { primary: '#059669', rgb: '5, 150, 105', cyan: '#34d399', blue: '#10b981' },
+    purple: { primary: '#7c3aed', rgb: '124, 58, 237', cyan: '#a78bfa', blue: '#8b5cf6' },
+    crimson: { primary: '#e11d48', rgb: '225, 29, 72', cyan: '#fb7185', blue: '#f43f5e' },
+    amber: { primary: '#d97706', rgb: '217, 119, 6', cyan: '#fbbf24', blue: '#f59e0b' },
+  };
+
+  const theme = map[colorKey] || map.cyan;
+  root.style.setProperty('--bs-primary', theme.primary);
+  root.style.setProperty('--bs-primary-rgb', theme.rgb);
+  root.style.setProperty('--accent-cyan', theme.cyan);
+  root.style.setProperty('--accent-blue', theme.blue);
+};
+
 export function SettingsManager({ isDarkMode, setIsDarkMode, showAlert }) {
   const [profile, setProfile] = useState(() => {
     const saved = localStorage.getItem('hospital_profile_settings');
@@ -19,23 +36,7 @@ export function SettingsManager({ isDarkMode, setIsDarkMode, showAlert }) {
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (accentColor === 'emerald') {
-      root.style.setProperty('--accent-cyan', '#34d399');
-      root.style.setProperty('--accent-blue', '#10b981');
-    } else if (accentColor === 'purple') {
-      root.style.setProperty('--accent-cyan', '#a78bfa');
-      root.style.setProperty('--accent-blue', '#8b5cf6');
-    } else if (accentColor === 'crimson') {
-      root.style.setProperty('--accent-cyan', '#fb7185');
-      root.style.setProperty('--accent-blue', '#f43f5e');
-    } else if (accentColor === 'amber') {
-      root.style.setProperty('--accent-cyan', '#fbbf24');
-      root.style.setProperty('--accent-blue', '#f59e0b');
-    } else {
-      root.style.setProperty('--accent-cyan', '#00f2fe');
-      root.style.setProperty('--accent-blue', '#4facfe');
-    }
+    applyAccentTheme(accentColor);
   }, [accentColor]);
 
   const handleChange = (e) => {
