@@ -313,7 +313,11 @@ function App() {
               <Reports />
             )}
             {activeView === 'settings' && (
-              <SettingsManager />
+              <SettingsManager 
+                isDarkMode={isDarkMode} 
+                setIsDarkMode={setIsDarkMode} 
+                showAlert={showAlert} 
+              />
             )}
           </div>
 
