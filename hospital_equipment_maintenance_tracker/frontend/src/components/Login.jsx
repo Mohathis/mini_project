@@ -108,7 +108,7 @@ export default function Login({ onLogin, departmentsList }) {
             <i className="bi bi-shield-plus" />
           </div>
           <div>
-            <h1 className="login-brand-title">HOSPITAL EQUIPMENT</h1>
+            <h1 className="login-brand-title">HOSPITAL EQUIPMEN</h1>
             <p className="login-brand-sub"> Maintenance Tracker</p>
           </div>
         </div>
