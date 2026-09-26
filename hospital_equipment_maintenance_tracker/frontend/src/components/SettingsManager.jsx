@@ -100,19 +100,68 @@ export function SettingsManager({ isDarkMode, setIsDarkMode, showAlert, hospital
                   />
                 </div>
 
-                <div className="col-md-4">
-                  <label className="form-label fw-semibold small">Report Logo Icon</label>
+                <div className="col-12">
+                  <label className="form-label fw-semibold small d-flex justify-content-between align-items-center">
+                    <span>Select Hospital Logo Icon</span>
+                    <span className="text-muted font-monospace" style={{ fontSize: '0.75rem' }}>Current: <i className={`bi ${profile.icon} text-primary fs-6 ms-1`}></i></span>
+                  </label>
+                  
+                  {/* Select Dropdown */}
                   <select
-                    className="form-select form-select-sm"
+                    className="form-select form-select-sm mb-2"
                     name="icon"
                     value={profile.icon}
                     onChange={handleChange}
                   >
-                    <option value="bi-shield-plus">Shield Plus</option>
-                    <option value="bi-heart-pulse-fill">Heart Pulse</option>
-                    <option value="bi-hospital-fill">Hospital</option>
-                    <option value="bi-activity">ECG Wave</option>
+                    <option value="bi-shield-plus">🛡️ Shield Plus</option>
+                    <option value="bi-heart-pulse-fill">🫀 Heart Pulse / Cardiology</option>
+                    <option value="bi-hospital-fill">🏥 Hospital Building</option>
+                    <option value="bi-stethoscope">🩺 Stethoscope / Medical</option>
+                    <option value="bi-activity">⚡ ECG Wave / Diagnostic</option>
+                    <option value="bi-crosshair2">⚕️ Medical Cross emblem</option>
+                    <option value="bi-plus-circle-fill">➕ Red Cross / Plus</option>
+                    <option value="bi-flask">🧪 Laboratory / Bio-Flask</option>
+                    <option value="bi-bandaid-fill">🩹 First Aid / Trauma</option>
+                    <option value="bi-dna">🧬 DNA / Genetics</option>
+                    <option value="bi-capsule">💊 Pharmacy / Therapeutics</option>
+                    <option value="bi-droplet-fill">🩸 Blood Drop / Hematology</option>
+                    <option value="bi-truck">🚑 Emergency / Ambulance</option>
+                    <option value="bi-building-fill-add">🏢 Medical Plaza Center</option>
+                    <option value="bi-cpu-fill">💻 Biomedical Equipment Tech</option>
                   </select>
+
+                  {/* Interactive Visual Icon Grid */}
+                  <div className="d-flex flex-wrap gap-2 p-2 border rounded bg-light bg-opacity-50">
+                    {[
+                      { id: 'bi-shield-plus', title: 'Shield' },
+                      { id: 'bi-heart-pulse-fill', title: 'Pulse' },
+                      { id: 'bi-hospital-fill', title: 'Hospital' },
+                      { id: 'bi-stethoscope', title: 'Stethoscope' },
+                      { id: 'bi-activity', title: 'ECG' },
+                      { id: 'bi-crosshair2', title: 'Cross' },
+                      { id: 'bi-plus-circle-fill', title: 'Plus' },
+                      { id: 'bi-flask', title: 'Lab' },
+                      { id: 'bi-bandaid-fill', title: 'Trauma' },
+                      { id: 'bi-dna', title: 'Genetics' },
+                      { id: 'bi-capsule', title: 'Pharmacy' },
+                      { id: 'bi-droplet-fill', title: 'Blood' },
+                      { id: 'bi-truck', title: 'Ambulance' },
+                      { id: 'bi-building-fill-add', title: 'Plaza' },
+                      { id: 'bi-cpu-fill', title: 'Tech' }
+                    ].map(item => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className={`btn btn-sm ${profile.icon === item.id ? 'btn-primary' : 'btn-outline-secondary'} d-flex align-items-center gap-1 py-1 px-2`}
+                        style={{ fontSize: '0.75rem' }}
+                        onClick={() => setProfile(prev => ({ ...prev, icon: item.id }))}
+                        title={item.title}
+                      >
+                        <i className={`bi ${item.id}`}></i>
+                        <span>{item.title}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="col-md-6">
