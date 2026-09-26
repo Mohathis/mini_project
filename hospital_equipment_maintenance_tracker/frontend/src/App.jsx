@@ -327,7 +327,7 @@ function App() {
               />
             )}
             {activeView === 'reports' && activeRole !== 'Staff' && (
-              <Reports />
+              <Reports hospitalProfile={hospitalProfile} departmentsList={departmentsList} />
             )}
             {activeView === 'settings' && (
               <SettingsManager 

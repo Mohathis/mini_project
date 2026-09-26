@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../App';
 
-function Reports() {
+function Reports({ hospitalProfile, departmentsList = [] }) {
   const [requestsList, setRequestsList] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -14,8 +14,9 @@ function Reports() {
     }
   })();
 
-  const hospitalName = savedProfile?.name || 'CityCare Hospital';
-  const hospitalIcon = savedProfile?.icon || 'bi-shield-plus';
+  const profile = hospitalProfile || savedProfile;
+  const hospitalName = profile?.name || 'CityCare Hospital';
+  const hospitalIcon = profile?.icon || 'bi-shield-plus';
 
   const getLocalDateString = () => {
     const d = new Date();
@@ -26,7 +27,7 @@ function Reports() {
   };
 
   const todayStr = getLocalDateString();
-  const defaultFromStr = '2026-01-01';
+  const defaultFromStr = ''; // Show all records by default without hiding older entries
 
   // Filters State
   const [fromDate, setFromDate] = useState(defaultFromStr);
@@ -46,8 +47,8 @@ function Reports() {
         fetch(`${API_URL}/requests`),
         fetch(`${API_URL}/requests/history/all`)
       ]);
-      const activeData = await resRequests.json();
-      const historyData = await resHistory.json();
+      const activeData = resRequests.ok ? await resRequests.json() : [];
+      const historyData = resHistory.ok ? await resHistory.json() : [];
 
       const activeList = Array.isArray(activeData) ? activeData : [];
       const historyList = Array.isArray(historyData) ? historyData : [];
@@ -57,7 +58,7 @@ function Reports() {
         ...h,
         createdAt: h.completedAt || h.createdAt,
         assignedTechnician: h.completedBy || h.assignedTechnician,
-        issueDescription: h.actionTaken || 'Maintenance completed successfully.',
+        issueDescription: h.actionTaken || h.issueDescription || 'Maintenance completed successfully.',
         status: h.status || 'Completed'
       }));
 
@@ -65,7 +66,7 @@ function Reports() {
       const combined = [...activeList, ...formattedHistory];
       
       // Sort combined list by date (newest first)
-      combined.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      combined.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
       setRequestsList(combined);
       
@@ -99,10 +100,10 @@ function Reports() {
         }
       }
 
-      const matchesStatus = status === 'All' || req.status === status;
+      const matchesStatus = status === 'All' || (req.status || '').toLowerCase() === status.toLowerCase();
       
-      const reqDept = req.equipmentId?.department || req.department || 'N/A';
-      const matchesDept = dept === 'All' || reqDept === dept;
+      const reqDept = (req.equipmentId?.department || req.department || 'N/A').toString();
+      const matchesDept = dept === 'All' || reqDept.toLowerCase().trim() === dept.toLowerCase().trim();
 
       const desc = (req.issueDescription || req.actionTaken || '').toLowerCase();
       const isPmRecord = desc.includes('preventive') || desc.includes('pm') || desc.includes('maintenance') || desc.includes('inspection') || desc.includes('scheduled');
@@ -111,12 +112,13 @@ function Reports() {
                           (type === 'Complaint' && !isPmRecord);
 
       const q = (kw || '').trim().toLowerCase();
+      const eqNameStr = (req.equipmentName || req.equipmentId?.name || req.equipmentId || '').toString().toLowerCase();
       const matchesKw = !q || 
         (req.requestId || '').toLowerCase().includes(q) ||
         (req.reportedBy || '').toLowerCase().includes(q) ||
-        (req.department || '').toLowerCase().includes(q) ||
-        (req.equipmentId?.name || req.equipmentId || '').toString().toLowerCase().includes(q) ||
-        (req.issueDescription || '').toLowerCase().includes(q) ||
+        reqDept.toLowerCase().includes(q) ||
+        eqNameStr.includes(q) ||
+        desc.includes(q) ||
         (req.assignedTechnician || '').toLowerCase().includes(q);
 
       return matchesDate && matchesStatus && matchesDept && matchesKw && matchesType;
@@ -131,13 +133,13 @@ function Reports() {
   };
 
   const handleReset = () => {
-    setFromDate(defaultFromStr);
+    setFromDate('');
     setToDate(todayStr);
     setStatusFilter('All');
     setDeptFilter('All');
     setKeywordSearch('');
     setTypeFilter('All');
-    runSearch(requestsList, defaultFromStr, todayStr, 'All', 'All', '', 'All');
+    runSearch(requestsList, '', todayStr, 'All', 'All', '', 'All');
   };
 
   const handlePrint = () => {
@@ -146,8 +148,9 @@ function Reports() {
 
   // Date Formatter Helper
   const formatDate = (dateStr) => {
-    if (!dateStr) return 'N/A';
+    if (!dateStr) return 'All Dates';
     const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const year = d.getFullYear();
@@ -155,16 +158,23 @@ function Reports() {
   };
 
   const getStatusBadgeStyle = (status) => {
-    if (status === 'Completed') return { backgroundColor: '#d1fae5', color: '#065f46', border: '1px solid #a7f3d0' };
-    if (status === 'In Progress') return { backgroundColor: '#dbeafe', color: '#1e40af', border: '1px solid #bfdbfe' };
+    const s = (status || '').toLowerCase();
+    if (s === 'completed') return { backgroundColor: '#d1fae5', color: '#065f46', border: '1px solid #a7f3d0' };
+    if (s === 'in progress') return { backgroundColor: '#dbeafe', color: '#1e40af', border: '1px solid #bfdbfe' };
     return { backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #fca5a5' };
   };
 
   // Metrics
   const totalCount = searchResults.length;
-  const completedCount = searchResults.filter(r => r.status === 'Completed').length;
-  const inProgressCount = searchResults.filter(r => r.status === 'In Progress').length;
-  const pendingCount = searchResults.filter(r => r.status === 'Pending').length;
+  const completedCount = searchResults.filter(r => (r.status || '').toLowerCase() === 'completed').length;
+  const inProgressCount = searchResults.filter(r => (r.status || '').toLowerCase() === 'in progress').length;
+  const pendingCount = searchResults.filter(r => (r.status || '').toLowerCase() === 'pending').length;
+
+  const defaultDepts = ['Emergency', 'ICU', 'Laboratory', 'Pharmacy', 'Radiology', 'Administration', 'OPD'];
+  const allDeptNames = Array.from(new Set([
+    ...defaultDepts,
+    ...departmentsList.map(d => typeof d === 'object' ? d.name : d)
+  ]));
 
   return (
     <div className="fade-in">
@@ -272,7 +282,7 @@ function Reports() {
           <p className="text-muted m-0 small">Search and compile custom maintenance logs and service statistics</p>
         </div>
         {searchResults.length > 0 && (
-          <button onClick={handlePrint} className="btn btn-blue d-flex align-items-center gap-2 px-4 py-2">
+          <button onClick={handlePrint} className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2">
             <i className="bi bi-printer"></i> Print Report
           </button>
         )}
@@ -281,7 +291,7 @@ function Reports() {
       {loading ? (
         <div className="text-center py-5">
           <div className="spinner-border text-primary" role="status"></div>
-          <p className="text-muted mt-2">Loading complaints registry...</p>
+          <p className="text-muted mt-2">Loading complaints & maintenance registry...</p>
         </div>
       ) : (
         <div className="row g-4">
@@ -362,13 +372,9 @@ function Reports() {
                       onChange={(e) => setDeptFilter(e.target.value)}
                     >
                       <option value="All">All Departments</option>
-                      <option value="Emergency">Emergency</option>
-                      <option value="ICU">ICU</option>
-                      <option value="Laboratory">Laboratory</option>
-                      <option value="Pharmacy">Pharmacy</option>
-                      <option value="Radiology">Radiology</option>
-                      <option value="Administration">Administration</option>
-                      <option value="OPD">OPD</option>
+                      {allDeptNames.map(dept => (
+                        <option key={dept} value={dept}>{dept}</option>
+                      ))}
                     </select>
                   </div>
 
@@ -382,7 +388,7 @@ function Reports() {
                     </button>
                     <button 
                       type="submit" 
-                      className="btn btn-blue w-50 py-2 text-white fw-bold"
+                      className="btn btn-primary w-50 py-2 text-white fw-bold"
                     >
                       Search
                     </button>
@@ -433,12 +439,12 @@ function Reports() {
                   <h3 className="fw-bold m-0 text-uppercase tracking-wider">{hospitalName}</h3>
                 </div>
                 <p className="text-muted small m-0 text-uppercase font-monospace">Equipment Maintenance Registry</p>
-                {savedProfile?.phone && (
+                {profile?.phone && (
                   <div className="small text-muted mt-1 font-monospace" style={{ fontSize: '0.75rem' }}>
-                    <span>Phone: {savedProfile.phone}</span> | <span>Email: {savedProfile.email || 'support@hospital.org'}</span>
+                    <span>Phone: {profile.phone}</span> | <span>Email: {profile.email || 'support@hospital.org'}</span>
                   </div>
                 )}
-                <div className="badge bg-dark mt-2 font-monospace px-3 py-1">System Report Document</div>
+                <div className="badge bg-dark mt-2 font-monospace px-3 py-1">Official Maintenance Audit Document</div>
               </div>
 
               {/* Report Parameters Overview */}
@@ -480,18 +486,22 @@ function Reports() {
                     <tbody>
                       {searchResults.map((req) => {
                         const eqDept = req.equipmentId?.department || req.department || 'N/A';
-                        const eqName = req.equipmentId?.name || req.equipmentId;
+                        const eqName = req.equipmentName || req.equipmentId?.name || (typeof req.equipmentId === 'string' ? req.equipmentId : 'N/A');
+                        const assetIdStr = typeof req.equipmentId === 'object' && req.equipmentId?.equipmentId ? req.equipmentId.equipmentId : req.equipmentId;
                         const desc = (req.issueDescription || req.actionTaken || '').toLowerCase();
                         const isPmRecord = desc.includes('preventive') || desc.includes('pm') || desc.includes('maintenance') || desc.includes('inspection') || desc.includes('scheduled');
                         const recordType = isPmRecord ? 'PM' : 'Complaint';
+                        const badgeStyle = getStatusBadgeStyle(req.status);
                         return (
                           <tr key={req._id}>
                             <td className="font-monospace fw-bold">{req.requestId}</td>
                             <td>
                               <div><strong>{eqName}</strong></div>
-                              <span className="text-muted font-monospace" style={{ fontSize: '0.75rem' }}>
-                                Asset ID: {typeof req.equipmentId === 'object' ? req.equipmentId.equipmentId : req.equipmentId}
-                              </span>
+                              {assetIdStr && (
+                                <span className="text-muted font-monospace" style={{ fontSize: '0.75rem' }}>
+                                  Asset ID: {assetIdStr}
+                                </span>
+                              )}
                             </td>
                             <td>{eqDept}</td>
                             <td>
@@ -503,8 +513,7 @@ function Reports() {
                             </td>
                             <td>
                               <span className="badge rounded-pill text-uppercase px-2 py-1" style={{
-                                backgroundColor: req.status === 'Completed' ? '#d1fae5' : req.status === 'In Progress' ? '#dbeafe' : '#fee2e2',
-                                color: req.status === 'Completed' ? '#065f46' : req.status === 'In Progress' ? '#1e40af' : '#991b1b',
+                                ...badgeStyle,
                                 fontSize: '0.7rem'
                               }}>
                                 {req.status}
