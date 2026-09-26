@@ -44,25 +44,7 @@ export function Header({
             <span>{formattedTime}</span>
           </div>
         </div>
-        <div className="d-none d-md-flex align-items-center bg-light border rounded px-2 py-1 gap-2">
-          <i className="bi bi-search text-muted small"></i>
-          <input 
-            type="text" 
-            placeholder="Search..." 
-            className="border-0 bg-transparent" 
-            style={{ outline: 'none', fontSize: '0.85rem', width: '200px', color: isDarkMode ? 'var(--text-main)' : 'inherit' }} 
-          />
-        </div>
 
-        {/* Theme Toggle Button */}
-        <button
-          className={`btn btn-link fs-5 p-0 text-muted border-0 d-flex align-items-center`}
-          onClick={() => setIsDarkMode(!isDarkMode)}
-          title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          style={{ outline: 'none', textDecoration: 'none' }}
-        >
-          <i className={`bi ${isDarkMode ? 'bi-sun-fill text-warning' : 'bi-moon-fill'}`}></i>
-        </button>
 
         {/* Notification icon */}
         <div className="position-relative" style={{ zIndex: 1050 }}>
