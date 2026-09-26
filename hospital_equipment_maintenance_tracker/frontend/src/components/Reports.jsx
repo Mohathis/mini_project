@@ -127,9 +127,30 @@ function Reports({ hospitalProfile, departmentsList = [] }) {
     setSearchResults(filtered);
   };
 
+  const handleFromDateChange = (val) => {
+    setFromDate(val);
+    if (val && toDate && val > toDate) {
+      setToDate(val);
+    }
+  };
+
+  const handleToDateChange = (val) => {
+    if (fromDate && val && val < fromDate) {
+      setToDate(fromDate);
+    } else {
+      setToDate(val);
+    }
+  };
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    runSearch(requestsList, fromDate, toDate, statusFilter, deptFilter, keywordSearch, typeFilter);
+    let validFrom = fromDate;
+    let validTo = toDate;
+    if (fromDate && toDate && fromDate > toDate) {
+      validTo = fromDate;
+      setToDate(fromDate);
+    }
+    runSearch(requestsList, validFrom, validTo, statusFilter, deptFilter, keywordSearch, typeFilter);
   };
 
   const handleReset = () => {
@@ -323,7 +344,8 @@ function Reports({ hospitalProfile, departmentsList = [] }) {
                         type="date" 
                         className="form-control" 
                         value={fromDate}
-                        onChange={(e) => setFromDate(e.target.value)}
+                        max={toDate || undefined}
+                        onChange={(e) => handleFromDateChange(e.target.value)}
                       />
                     </div>
                     <div className="col-6">
@@ -332,7 +354,8 @@ function Reports({ hospitalProfile, departmentsList = [] }) {
                         type="date" 
                         className="form-control" 
                         value={toDate}
-                        onChange={(e) => setToDate(e.target.value)}
+                        min={fromDate || undefined}
+                        onChange={(e) => handleToDateChange(e.target.value)}
                       />
                     </div>
                   </div>
