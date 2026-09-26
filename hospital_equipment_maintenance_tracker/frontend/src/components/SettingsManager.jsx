@@ -8,6 +8,13 @@ export const applyAccentTheme = (colorKey) => {
     purple: { primary: '#7c3aed', rgb: '124, 58, 237', cyan: '#a78bfa', blue: '#8b5cf6' },
     crimson: { primary: '#e11d48', rgb: '225, 29, 72', cyan: '#fb7185', blue: '#f43f5e' },
     amber: { primary: '#d97706', rgb: '217, 119, 6', cyan: '#fbbf24', blue: '#f59e0b' },
+    sapphire: { primary: '#1d4ed8', rgb: '29, 78, 216', cyan: '#60a5fa', blue: '#2563eb' },
+    teal: { primary: '#0f766e', rgb: '15, 118, 110', cyan: '#2dd4bf', blue: '#14b8a6' },
+    rose: { primary: '#be185d', rgb: '190, 24, 93', cyan: '#f472b6', blue: '#ec4899' },
+    jade: { primary: '#15803d', rgb: '21, 128, 61', cyan: '#4ade80', blue: '#22c55e' },
+    violet: { primary: '#6d28d9', rgb: '109, 40, 217', cyan: '#c084fc', blue: '#a855f7' },
+    orange: { primary: '#ea580c', rgb: '234, 88, 12', cyan: '#fb923c', blue: '#f97316' },
+    slate: { primary: '#334155', rgb: '51, 65, 85', cyan: '#94a3b8', blue: '#475569' }
   };
 
   const theme = map[colorKey] || map.cyan;
@@ -236,21 +243,28 @@ export function SettingsManager({ isDarkMode, setIsDarkMode, showAlert, hospital
               )}
 
               {/* Accent Color Selection */}
-              <label className="form-label fw-semibold small mb-2 d-block">Select Accent Color</label>
+              <label className="form-label fw-semibold small mb-2 d-block">Select Accent Color Palette</label>
               <div className="d-flex flex-wrap gap-2 mb-3">
                 {[
-                  { id: 'cyan', label: 'Cyan', color: '#00f2fe' },
-                  { id: 'emerald', label: 'Emerald', color: '#10b981' },
-                  { id: 'purple', label: 'Purple', color: '#8b5cf6' },
-                  { id: 'crimson', label: 'Crimson', color: '#f43f5e' },
-                  { id: 'amber', label: 'Amber', color: '#f59e0b' }
+                  { id: 'cyan', label: 'Ocean Cyan', color: '#00f2fe' },
+                  { id: 'emerald', label: 'Emerald Health', color: '#10b981' },
+                  { id: 'purple', label: 'Royal Amethyst', color: '#8b5cf6' },
+                  { id: 'crimson', label: 'Crimson Alert', color: '#f43f5e' },
+                  { id: 'amber', label: 'Warm Amber', color: '#f59e0b' },
+                  { id: 'sapphire', label: 'Deep Sapphire', color: '#2563eb' },
+                  { id: 'teal', label: 'Teal Turquoise', color: '#14b8a6' },
+                  { id: 'rose', label: 'Rose Magenta', color: '#ec4899' },
+                  { id: 'jade', label: 'Forest Jade', color: '#22c55e' },
+                  { id: 'violet', label: 'Electric Violet', color: '#a855f7' },
+                  { id: 'orange', label: 'Sunset Orange', color: '#f97316' },
+                  { id: 'slate', label: 'Midnight Slate', color: '#64748b' }
                 ].map(c => (
                   <button
                     key={c.id}
                     type="button"
                     className={`btn btn-sm d-flex align-items-center gap-1 ${accentColor === c.id ? 'btn-primary' : 'btn-outline-secondary'}`}
                     onClick={() => setAccentColor(c.id)}
-                    style={{ fontSize: '0.8rem' }}
+                    style={{ fontSize: '0.78rem' }}
                   >
                     <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: c.color, display: 'inline-block' }}></span>
                     {c.label}
