@@ -343,7 +343,7 @@ function App() {
           {/* Footer */}
           <footer className="py-3 px-4 mt-auto border-top text-muted" style={{ backgroundColor: isDarkMode ? 'var(--bg-secondary)' : '#ffffff', borderTopColor: isDarkMode ? 'var(--card-border)' : '#f1f5f9', fontSize: '0.85rem' }}>
             <div className="d-flex justify-content-between align-items-center">
-              <div>CityCare Hospital Equipment Tracker &copy; 2026</div>
+              <div>{hospitalProfile?.name || 'CityCare Hospital'} Equipment Tracker &copy; 2026</div>
               <div className="small font-monospace">
                 Server: {API_URL} | Database: <span className="text-success"><i className="bi bi-circle-fill" style={{ fontSize: '0.5rem' }}></i> Operational</span>
               </div>

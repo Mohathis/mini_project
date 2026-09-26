@@ -239,7 +239,7 @@ export default function Login({ onLogin, departmentsList, hospitalProfile }) {
         </div>
 
         <p className="login-footer-text">
-          CityCare Hospital &copy; 2026 &mdash; Equipment Tracker v1.0
+          {hospitalName} &copy; 2026 &mdash; Equipment Tracker v1.0
         </p>
       </div>
     </div>
