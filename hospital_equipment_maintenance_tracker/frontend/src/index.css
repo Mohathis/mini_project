@@ -60,7 +60,24 @@
 }
 
 .bg-primary {
-  background-color: var(--bs-primary) !important;
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-primary-rgb, 2, 132, 199), var(--bs-bg-opacity)) !important;
+}
+
+.bg-opacity-10 {
+  --bs-bg-opacity: 0.1 !important;
+}
+
+.bg-opacity-25 {
+  --bs-bg-opacity: 0.25 !important;
+}
+
+.bg-opacity-50 {
+  --bs-bg-opacity: 0.5 !important;
+}
+
+.bg-opacity-75 {
+  --bs-bg-opacity: 0.75 !important;
 }
 
 .border-primary {

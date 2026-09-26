@@ -410,7 +410,7 @@ function Reports() {
                 </div>
               </div>
               <div className="col-md-3 col-6">
-                <div className="card-clean text-center py-3 px-2 border-0 shadow-sm bg-primary bg-opacity-10 text-primary">
+                <div className="card-clean text-center py-3 px-2 border-0 shadow-sm" style={{ backgroundColor: 'rgba(var(--bs-primary-rgb, 2, 132, 199), 0.12)', color: 'var(--bs-primary, #0284c7)' }}>
                   <span className="small fw-bold d-block text-uppercase">In Progress</span>
                   <h3 className="fw-bold m-0 mt-1">{inProgressCount}</h3>
                 </div>
