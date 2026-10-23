@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
 
-const USERS = {
-  Admin: { username: 'admin', password: 'admin123', name: 'Admin Manager', initials: 'AM' },
-  Technician: { username: 'john', password: 'tech123', name: 'John Mathew', initials: 'JM' },
-  Staff: { username: 'nurse', password: 'staff123', name: 'Nurse Joy', initials: 'NJ', department: 'Emergency' },
-};
-// Backward compatibility alias
-USERS.Manager = USERS.Admin;
 
 const ROLE_CONFIG = {
   Admin: {
@@ -64,12 +57,6 @@ export default function Login({ onLogin, departmentsList, hospitalProfile }) {
     setPassword('');
   };
 
-  const fillDemo = () => {
-    const u = USERS[selectedRole] || USERS.Admin;
-    setUsername(u.username);
-    setPassword(u.password);
-    setError('');
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -221,22 +208,6 @@ export default function Login({ onLogin, departmentsList, hospitalProfile }) {
           </button>
         </form>
 
-        {/* Demo Credentials */}
-        <div className="demo-creds">
-          <div className="demo-creds-header">
-            <i className="bi bi-info-circle me-1" />
-            Demo Credentials
-          </div>
-          <div className="demo-creds-row">
-            <span className="demo-creds-key">Username:</span>
-            <code className="demo-creds-val">{USERS[selectedRole]?.username}</code>
-            <span className="demo-creds-key ms-3">Password:</span>
-            <code className="demo-creds-val">{USERS[selectedRole]?.password}</code>
-            <button type="button" className="demo-fill-btn" onClick={fillDemo}>
-              <i className="bi bi-lightning-fill me-1" />Autofill
-            </button>
-          </div>
-        </div>
 
         <p className="login-footer-text">
           {hospitalName} &copy; 2026 &mdash; Equipment Tracker v1.0

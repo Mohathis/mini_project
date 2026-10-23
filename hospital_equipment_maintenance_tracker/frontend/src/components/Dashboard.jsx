@@ -652,7 +652,7 @@ function Dashboard({ activeRole, onNavigate, currentUser, initialSubView, clearI
                             </span>
                             {act.cost > 0 && (
                               <span className="badge bg-light text-success border border-success border-opacity-25 px-1.5 py-0.5 font-monospace" style={{ fontSize: '0.7rem' }}>
-                                ${act.cost}
+                                ₹{act.cost}
                               </span>
                             )}
                           </div>
@@ -991,11 +991,11 @@ function Dashboard({ activeRole, onNavigate, currentUser, initialSubView, clearI
                 </div>
               </div>
 
-              {/* Maintenance Cost ($) */}
+              {/* Maintenance Cost (₹) */}
               <div className="col-md-6">
-                <label className="form-label small fw-bold text-dark mb-1">Maintenance Cost ($)</label>
+                <label className="form-label small fw-bold text-dark mb-1">Maintenance Cost (₹)</label>
                 <div className="input-group">
-                  <span className="input-group-text bg-white fw-bold text-success">$</span>
+                  <span className="input-group-text bg-white fw-bold text-success">₹</span>
                   <input 
                     type="number" 
                     step="0.01"
@@ -1005,7 +1005,7 @@ function Dashboard({ activeRole, onNavigate, currentUser, initialSubView, clearI
                     value={pmForm.cost}
                     onChange={(e) => setPmForm({ ...pmForm, cost: e.target.value })}
                   />
-                  <span className="input-group-text bg-white text-muted small">USD</span>
+                  <span className="input-group-text bg-white text-muted small">INR</span>
                 </div>
                 <div className="form-text text-muted" style={{ fontSize: '0.72rem' }}>
                   Total cost of service, labor, or parts incurred

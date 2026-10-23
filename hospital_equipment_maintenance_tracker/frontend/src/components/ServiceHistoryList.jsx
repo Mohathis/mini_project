@@ -42,7 +42,7 @@ function ServiceHistoryList({ activeRole, staffDepartment, currentUser, viewMode
     serviceType: 'Preventive Maintenance', // Selected maintenance type
     actionTaken: '', // Diagnostic description or work done
     partsReplaced: '', // List of replaced components/spares
-    cost: '', // Maintenance expenditure amount in USD
+    cost: '', // Maintenance expenditure amount in ₹
     downtimeHours: '', // Equipment downtime in hours
     completedBy: currentUser?.name || 'Technician', // Servicing technician name
     notes: '', // Additional maintenance notes
@@ -626,7 +626,7 @@ function ServiceHistoryList({ activeRole, staffDepartment, currentUser, viewMode
                     </div>
                     <div>
                       <span className="text-muted small fw-bold d-block" style={{ fontSize: '0.68rem', letterSpacing: '0.5px' }}>TOTAL MAINTENANCE SPEND</span>
-                      <h4 className="fw-bold m-0 text-purple" style={{ color: '#7e22ce' }}>${totalMaintenanceSpend.toLocaleString()}</h4>
+                      <h4 className="fw-bold m-0 text-purple" style={{ color: '#7e22ce' }}>₹{totalMaintenanceSpend.toLocaleString()}</h4>
                       <small className="text-muted" style={{ fontSize: '0.68rem' }}>Lifecycle maintenance</small>
                     </div>
                   </div>
@@ -837,7 +837,7 @@ function ServiceHistoryList({ activeRole, staffDepartment, currentUser, viewMode
                                     {eqLogs.length} logs
                                   </span>
                                   {totalEqCost > 0 && (
-                                    <div className="text-muted font-monospace" style={{ fontSize: '0.68rem' }}>Rs{totalEqCost}</div>
+                                    <div className="text-muted font-monospace" style={{ fontSize: '0.68rem' }}>₹{totalEqCost}</div>
                                   )}
                                 </td>
                                 <td className="text-end">
@@ -927,7 +927,7 @@ function ServiceHistoryList({ activeRole, staffDepartment, currentUser, viewMode
                                 </td>
                                 <td className="small text-muted">{item.partsReplaced || 'None'}</td>
                                 <td className="font-monospace small">{item.downtimeHours ? `${item.downtimeHours}h` : '0h'}</td>
-                                <td className="font-monospace small text-success fw-semibold">{item.cost ? `$${item.cost}` : '$0'}</td>
+                                <td className="font-monospace small text-success fw-semibold">{item.cost ? `₹${item.cost}` : '₹0'}</td>
                                 <td className="text-end">
                                   {eq && (
                                     <button 
@@ -1207,8 +1207,8 @@ function ServiceHistoryList({ activeRole, staffDepartment, currentUser, viewMode
                               Downtime: <strong>{log.downtimeHours ? `${log.downtimeHours}h` : '0h'}</strong>
                             </span>
                             <span>
-                              <i className="bi bi-currency-dollar me-1 text-secondary"></i>
-                              Cost: <strong>${log.cost || 0}</strong>
+                              <i className="bi bi-currency-rupee me-1 text-secondary"></i>
+                              Cost: <strong>₹{log.cost || 0}</strong>
                             </span>
                           </div>
                         </div>
@@ -1335,11 +1335,11 @@ function ServiceHistoryList({ activeRole, staffDepartment, currentUser, viewMode
                       </div>
                     </div>
 
-                    {/* Maintenance Cost ($) */}
+                    {/* Maintenance Cost (₹) */}
                     <div className="col-md-6">
-                      <label className="form-label small fw-bold text-dark mb-1">Maintenance Cost ($)</label>
+                      <label className="form-label small fw-bold text-dark mb-1">Maintenance Cost (₹)</label>
                       <div className="input-group">
-                        <span className="input-group-text bg-white fw-bold text-success">$</span>
+                        <span className="input-group-text bg-white fw-bold text-success">₹</span>
                         <input 
                           type="number"
                           min="0"
@@ -1349,7 +1349,7 @@ function ServiceHistoryList({ activeRole, staffDepartment, currentUser, viewMode
                           value={recordForm.cost}
                           onChange={(e) => setRecordForm({ ...recordForm, cost: e.target.value })}
                         />
-                        <span className="input-group-text bg-white text-muted small">USD</span>
+                        <span className="input-group-text bg-white text-muted small">INR</span>
                       </div>
                       <div className="form-text text-muted" style={{ fontSize: '0.72rem' }}>
                         Total cost of service, labor, or parts incurred
